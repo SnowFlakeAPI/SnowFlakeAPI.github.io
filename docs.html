@@ -167,6 +167,7 @@
       <span class="nav-item active" data-section="introduction">Introduction</span>
       <span class="nav-item" data-section="authentication">Authentication</span>
       <span class="nav-item" data-section="quickstart">Quick Start</span>
+      <span class="nav-item" data-section="getapikey">Get API Key</span>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Endpoints</div>
@@ -190,30 +191,66 @@
       <p>Welcome to the Snowflake API documentation. Snowflake is a <span class="highlight">secure</span> and <span class="highlight">reliable</span> key system designed for <span class="highlight">simplicity</span>.</p>
       <h3>Base URL</h3>
       <div class="code-block">
-        <span class="url">https://api.snowflake.dev/v1</span>
+        <span class="url">https://yourdomain.com/v1</span>
       </div>
       <h3>Features</h3>
-      <p><span class="highlight">authentication</span> · <span class="highlight">validation</span> · <span class="highlight">management</span></p>
+      <p><span class="highlight">authentication</span> · <span class="highlight">validation</span> · <span class="highlight">management</span> · <span class="highlight">hwid binding</span></p>
     </div>
 
     <!-- Authentication -->
     <div class="section" id="authentication">
       <h2>Authentication</h2>
-      <p>All API requests require authentication using your <span class="highlight">API key</span>. Include your API key in the request header.</p>
+      <p>All API requests require authentication using your <span class="highlight">Snowflake API key</span>. Include your API key in the request header.</p>
       <h3>Header</h3>
       <div class="code-block">
-        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_API_KEY</span>
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_SNOWFLAKE_API_KEY</span>
       </div>
-      <h3>Getting Your API Key</h3>
-      <p>You can obtain your API key from the <span class="highlight">dashboard</span> after creating an account. Keep your API key secure and never share it publicly.</p>
+      <h3>Getting Your Snowflake API Key</h3>
+      <p>You need to be a registered user to obtain a Snowflake API key. First, log in to your account, then request an API key through the <span class="highlight">/api/snowflake/apikey</span> endpoint. Keep your API key secure and never share it publicly.</p>
+    </div>
+
+    <!-- Get API Key -->
+    <div class="section" id="getapikey">
+      <h2>Get API Key</h2>
+      <p>Create a Snowflake API key for your account. Requires user authentication token.</p>
+      <div class="code-block">
+        <span class="method">POST</span> <span class="url">/api/snowflake/apikey</span>
+      </div>
+      <h3>Headers</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_USER_AUTH_TOKEN</span>
+      </div>
+      <h3>Body Parameters</h3>
+      <table class="table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>plan</code></td><td>string</td><td>Plan tier: free, basic, pro, enterprise (default: free)</td></tr>
+      </table>
+      <h3>Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"success"</span>: <span class="string">true</span>,<br>
+        &nbsp;&nbsp;<span class="key">"apiKey"</span>: <span class="string">"sfk_a1b2c3d4..."</span>,<br>
+        &nbsp;&nbsp;<span class="key">"plan"</span>: <span class="string">"free"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"created"</span>: <span class="string">"2025-01-15T10:30:00.000Z"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"message"</span>: <span class="string">"API key created successfully"</span><br>
+        }
+      </div>
+      <h3>List Your API Keys</h3>
+      <div class="code-block">
+        <span class="method">GET</span> <span class="url">/api/snowflake/apikeys</span>
+      </div>
+      <h3>Delete API Key</h3>
+      <div class="code-block">
+        <span class="method">DELETE</span> <span class="url">/api/snowflake/apikey/</span><span class="param">{apiKey}</span>
+      </div>
     </div>
 
     <!-- Quick Start -->
     <div class="section" id="quickstart">
       <h2>Quick Start</h2>
       <p>Get started with Snowflake API in minutes.</p>
-      <h3>Step 1: Get API Key</h3>
-      <p>Sign up and retrieve your API key from the dashboard.</p>
+      <h3>Step 1: Get Your Snowflake API Key</h3>
+      <p>Register an account and create a Snowflake API key via <span class="highlight">POST /api/snowflake/apikey</span></p>
       <h3>Step 2: Make Your First Request</h3>
       <div class="code-block">
         <span class="comment">// validate a key</span><br>
@@ -224,7 +261,9 @@
         {<br>
         &nbsp;&nbsp;<span class="key">"valid"</span>: <span class="string">true</span>,<br>
         &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
-        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span><br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"hwid"</span>: <span class="string">null</span>,<br>
+        &nbsp;&nbsp;<span class="key">"uses"</span>: <span class="string">1</span><br>
         }
       </div>
     </div>
@@ -234,13 +273,17 @@
       <h2>Validate Key</h2>
       <p>Check if a license key is valid and retrieve its metadata.</p>
       <div class="code-block">
-        <span class="method">GET</span> <span class="url">/validate?key=</span><span class="param">{key}</span>
+        <span class="method">GET</span> <span class="url">/v1/validate?key=</span><span class="param">{key}</span><span class="url">&hwid=</span><span class="param">{hwid}</span>
       </div>
-      <h3>Parameters</h3>
+      <h3>Headers</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_SNOWFLAKE_API_KEY</span>
+      </div>
+      <h3>Query Parameters</h3>
       <table class="table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-        <tr><td><code>key</code></td><td>string</td><td>The license key to validate</td></tr>
-        <tr><td><code>hwid</code></td><td>string</td><td>Optional hardware ID for binding</td></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to validate (required)</td></tr>
+        <tr><td><code>hwid</code></td><td>string</td><td>Hardware ID for binding (optional)</td></tr>
       </table>
       <h3>Response</h3>
       <div class="code-block">
@@ -248,7 +291,8 @@
         &nbsp;&nbsp;<span class="key">"valid"</span>: <span class="string">true</span>,<br>
         &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
         &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span>,<br>
-        &nbsp;&nbsp;<span class="key">"hwid"</span>: <span class="string">"ABC123"</span><br>
+        &nbsp;&nbsp;<span class="key">"hwid"</span>: <span class="string">"ABC123"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"uses"</span>: <span class="string">5</span><br>
         }
       </div>
     </div>
@@ -258,21 +302,36 @@
       <h2>Create Key</h2>
       <p>Generate a new license key.</p>
       <div class="code-block">
-        <span class="method">POST</span> <span class="url">/create</span>
+        <span class="method">POST</span> <span class="url">/v1/create</span>
+      </div>
+      <h3>Headers</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_SNOWFLAKE_API_KEY</span><br>
+        <span class="key">Content-Type</span>: <span class="string">application/json</span>
       </div>
       <h3>Body Parameters</h3>
       <table class="table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-        <tr><td><code>duration</code></td><td>integer</td><td>Key duration in days</td></tr>
+        <tr><td><code>duration</code></td><td>integer</td><td>Key duration in days (required)</td></tr>
         <tr><td><code>note</code></td><td>string</td><td>Optional note for the key</td></tr>
-        <tr><td><code>hwid_lock</code></td><td>boolean</td><td>Enable hardware ID binding</td></tr>
+        <tr><td><code>hwid_lock</code></td><td>boolean</td><td>Enable hardware ID binding (default: false)</td></tr>
       </table>
+      <h3>Request Body</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"duration"</span>: <span class="string">365</span>,<br>
+        &nbsp;&nbsp;<span class="key">"note"</span>: <span class="string">"Premium user"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"hwid_lock"</span>: <span class="string">true</span><br>
+        }
+      </div>
       <h3>Response</h3>
       <div class="code-block">
         {<br>
         &nbsp;&nbsp;<span class="key">"success"</span>: <span class="string">true</span>,<br>
         &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-A1B2-C3D4"</span>,<br>
-        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span><br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"created"</span>: <span class="string">"2025-01-01"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"hwidLock"</span>: <span class="string">true</span><br>
         }
       </div>
     </div>
@@ -282,12 +341,16 @@
       <h2>Delete Key</h2>
       <p>Permanently delete a license key.</p>
       <div class="code-block">
-        <span class="method">DELETE</span> <span class="url">/delete?key=</span><span class="param">{key}</span>
+        <span class="method">DELETE</span> <span class="url">/v1/delete?key=</span><span class="param">{key}</span>
       </div>
-      <h3>Parameters</h3>
+      <h3>Headers</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_SNOWFLAKE_API_KEY</span>
+      </div>
+      <h3>Query Parameters</h3>
       <table class="table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-        <tr><td><code>key</code></td><td>string</td><td>The license key to delete</td></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to delete (required)</td></tr>
       </table>
       <h3>Response</h3>
       <div class="code-block">
@@ -303,12 +366,16 @@
       <h2>Get Key Info</h2>
       <p>Retrieve detailed information about a license key.</p>
       <div class="code-block">
-        <span class="method">GET</span> <span class="url">/info?key=</span><span class="param">{key}</span>
+        <span class="method">GET</span> <span class="url">/v1/info?key=</span><span class="param">{key}</span>
       </div>
-      <h3>Parameters</h3>
+      <h3>Headers</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_SNOWFLAKE_API_KEY</span>
+      </div>
+      <h3>Query Parameters</h3>
       <table class="table">
         <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
-        <tr><td><code>key</code></td><td>string</td><td>The license key to look up</td></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to look up (required)</td></tr>
       </table>
       <h3>Response</h3>
       <div class="code-block">
@@ -329,8 +396,8 @@
       <p>Common error responses from the API.</p>
       <table class="table">
         <tr><th>Code</th><th>Message</th><th>Description</th></tr>
-        <tr><td><code>400</code></td><td>Bad Request</td><td>Invalid parameters</td></tr>
-        <tr><td><code>401</code></td><td>Unauthorized</td><td>Invalid API key</td></tr>
+        <tr><td><code>400</code></td><td>Bad Request</td><td>Invalid parameters or missing required fields</td></tr>
+        <tr><td><code>401</code></td><td>Unauthorized</td><td>Invalid or missing Snowflake API key</td></tr>
         <tr><td><code>404</code></td><td>Not Found</td><td>Key does not exist</td></tr>
         <tr><td><code>409</code></td><td>Conflict</td><td>HWID mismatch</td></tr>
         <tr><td><code>410</code></td><td>Gone</td><td>Key expired</td></tr>
@@ -350,7 +417,7 @@
     <!-- Rate Limits -->
     <div class="section" id="ratelimits">
       <h2>Rate Limits</h2>
-      <p>API requests are rate limited to ensure fair usage.</p>
+      <p>API requests are rate limited to ensure fair usage. Rate limits are based on your Snowflake API key plan.</p>
       <table class="table">
         <tr><th>Plan</th><th>Requests</th><th>Window</th></tr>
         <tr><td><code>Free</code></td><td>100</td><td>per minute</td></tr>
@@ -364,6 +431,7 @@
         <span class="key">X-RateLimit-Remaining</span>: <span class="string">95</span><br>
         <span class="key">X-RateLimit-Reset</span>: <span class="string">1704067200</span>
       </div>
+      <p>Rate limits reset every minute. The <span class="highlight">X-RateLimit-Reset</span> header indicates the Unix timestamp when your limit will reset.</p>
     </div>
 
     <!-- Examples -->
@@ -373,8 +441,8 @@
       <h3>Python</h3>
       <div class="code-block">
         <span class="key">import</span> requests<br><br>
-        <span class="param">url</span> = <span class="string">"https://api.snowflake.dev/v1/validate"</span><br>
-        <span class="param">headers</span> = {<span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span>}<br>
+        <span class="param">url</span> = <span class="string">"https://yourdomain.com/v1/validate"</span><br>
+        <span class="param">headers</span> = {<span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_SNOWFLAKE_API_KEY"</span>}<br>
         <span class="param">params</span> = {<span class="string">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>}<br><br>
         <span class="param">response</span> = requests.get(url, headers=headers, params=params)<br>
         <span class="key">print</span>(response.json())
@@ -382,16 +450,23 @@
       <h3>JavaScript</h3>
       <div class="code-block">
         <span class="key">const</span> <span class="param">response</span> = <span class="key">await</span> fetch(<br>
-        &nbsp;&nbsp;<span class="string">"https://api.snowflake.dev/v1/validate?key=SNOW-XXXX-XXXX"</span>,<br>
-        &nbsp;&nbsp;{ headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span> } }<br>
+        &nbsp;&nbsp;<span class="string">"https://yourdomain.com/v1/validate?key=SNOW-XXXX-XXXX"</span>,<br>
+        &nbsp;&nbsp;{ headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_SNOWFLAKE_API_KEY"</span> } }<br>
         );<br><br>
         <span class="key">const</span> <span class="param">data</span> = <span class="key">await</span> response.json();<br>
         console.log(data);
       </div>
       <h3>cURL</h3>
       <div class="code-block">
-        curl -X GET <span class="string">"https://api.snowflake.dev/v1/validate?key=SNOW-XXXX-XXXX"</span> \<br>
-        &nbsp;&nbsp;-H <span class="string">"Authorization: Bearer YOUR_API_KEY"</span>
+        curl -X GET <span class="string">"https://yourdomain.com/v1/validate?key=SNOW-XXXX-XXXX"</span> \<br>
+        &nbsp;&nbsp;-H <span class="string">"Authorization: Bearer YOUR_SNOWFLAKE_API_KEY"</span>
+      </div>
+      <h3>Creating a Key</h3>
+      <div class="code-block">
+        curl -X POST <span class="string">"https://yourdomain.com/v1/create"</span> \<br>
+        &nbsp;&nbsp;-H <span class="string">"Authorization: Bearer YOUR_SNOWFLAKE_API_KEY"</span> \<br>
+        &nbsp;&nbsp;-H <span class="string">"Content-Type: application/json"</span> \<br>
+        &nbsp;&nbsp;-d <span class="string">'{"duration": 365, "note": "Test key", "hwid_lock": true}'</span>
       </div>
     </div>
   </main>
