@@ -60,6 +60,7 @@
       color: #6b6882;
       text-decoration: none;
       font-size: 12px;
+      cursor: pointer;
     }
     .nav-item:hover {
       color: #c4b5fd;
@@ -89,6 +90,9 @@
       font-size: 12px;
       line-height: 1.7;
       margin-bottom: 12px;
+    }
+    .highlight {
+      color: #c4b5fd;
     }
     .code-block {
       border: 1px solid #4a4a4a;
@@ -142,6 +146,17 @@
     a:hover {
       color: #c4b5fd;
     }
+    .section {
+      display: none;
+      padding-bottom: 30px;
+    }
+    .section.active {
+      display: block;
+    }
+    .divider {
+      border-top: 1px solid #4a4a4a;
+      margin: 25px 0;
+    }
   </style>
 </head>
 <body>
@@ -149,68 +164,247 @@
     <div class="logo">❄ snowflake api</div>
     <div class="nav-section">
       <div class="nav-section-title">Getting Started</div>
-      <a href="#" class="nav-item active">Introduction</a>
-      <a href="#" class="nav-item">Authentication</a>
-      <a href="#" class="nav-item">Quick Start</a>
+      <span class="nav-item active" data-section="introduction">Introduction</span>
+      <span class="nav-item" data-section="authentication">Authentication</span>
+      <span class="nav-item" data-section="quickstart">Quick Start</span>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Endpoints</div>
-      <a href="#" class="nav-item">Validate Key</a>
-      <a href="#" class="nav-item">Create Key</a>
-      <a href="#" class="nav-item">Delete Key</a>
-      <a href="#" class="nav-item">Get Key Info</a>
+      <span class="nav-item" data-section="validate">Validate Key</span>
+      <span class="nav-item" data-section="create">Create Key</span>
+      <span class="nav-item" data-section="delete">Delete Key</span>
+      <span class="nav-item" data-section="info">Get Key Info</span>
     </div>
     <div class="nav-section">
       <div class="nav-section-title">Resources</div>
-      <a href="#" class="nav-item">Error Codes</a>
-      <a href="#" class="nav-item">Rate Limits</a>
-      <a href="#" class="nav-item">Examples</a>
+      <span class="nav-item" data-section="errors">Error Codes</span>
+      <span class="nav-item" data-section="ratelimits">Rate Limits</span>
+      <span class="nav-item" data-section="examples">Examples</span>
     </div>
   </nav>
 
   <main class="main">
-    <h2>Introduction</h2>
-    <p>Welcome to the Snowflake API documentation. Snowflake is a <span class="param">secure</span> and <span class="param">reliable</span> key system designed for <span class="param">simplicity</span>.</p>
-
-    <h3>Base URL</h3>
-    <div class="code-block">
-      <span class="url">https://api.snowflake.dev/v1</span>
+    <!-- Introduction -->
+    <div class="section active" id="introduction">
+      <h2>Introduction</h2>
+      <p>Welcome to the Snowflake API documentation. Snowflake is a <span class="highlight">secure</span> and <span class="highlight">reliable</span> key system designed for <span class="highlight">simplicity</span>.</p>
+      <h3>Base URL</h3>
+      <div class="code-block">
+        <span class="url">https://api.snowflake.dev/v1</span>
+      </div>
+      <h3>Features</h3>
+      <p><span class="highlight">authentication</span> · <span class="highlight">validation</span> · <span class="highlight">management</span></p>
     </div>
 
-    <h3>Validate Key</h3>
-    <p>Check if a license key is valid and retrieve its metadata.</p>
-    <div class="code-block">
-      <span class="method">GET</span> <span class="url">/validate?key=</span><span class="param">{key}</span>
+    <!-- Authentication -->
+    <div class="section" id="authentication">
+      <h2>Authentication</h2>
+      <p>All API requests require authentication using your <span class="highlight">API key</span>. Include your API key in the request header.</p>
+      <h3>Header</h3>
+      <div class="code-block">
+        <span class="key">Authorization</span>: <span class="string">Bearer YOUR_API_KEY</span>
+      </div>
+      <h3>Getting Your API Key</h3>
+      <p>You can obtain your API key from the <span class="highlight">dashboard</span> after creating an account. Keep your API key secure and never share it publicly.</p>
     </div>
 
-    <h3>Response</h3>
-    <div class="code-block">
-      <span class="comment">// success response</span><br>
-      {<br>
-      &nbsp;&nbsp;<span class="key">"valid"</span>: <span class="string">true</span>,<br>
-      &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
-      &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span><br>
-      }
+    <!-- Quick Start -->
+    <div class="section" id="quickstart">
+      <h2>Quick Start</h2>
+      <p>Get started with Snowflake API in minutes.</p>
+      <h3>Step 1: Get API Key</h3>
+      <p>Sign up and retrieve your API key from the dashboard.</p>
+      <h3>Step 2: Make Your First Request</h3>
+      <div class="code-block">
+        <span class="comment">// validate a key</span><br>
+        <span class="method">GET</span> <span class="url">/v1/validate?key=</span><span class="param">SNOW-XXXX-XXXX</span>
+      </div>
+      <h3>Step 3: Handle Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"valid"</span>: <span class="string">true</span>,<br>
+        &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span><br>
+        }
+      </div>
     </div>
 
-    <h3>Parameters</h3>
-    <table class="table">
-      <tr>
-        <th>Parameter</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-      <tr>
-        <td><code>key</code></td>
-        <td>string</td>
-        <td>The license key to validate</td>
-      </tr>
-      <tr>
-        <td><code>hwid</code></td>
-        <td>string</td>
-        <td>Optional hardware ID for binding</td>
-      </tr>
-    </table>
+    <!-- Validate Key -->
+    <div class="section" id="validate">
+      <h2>Validate Key</h2>
+      <p>Check if a license key is valid and retrieve its metadata.</p>
+      <div class="code-block">
+        <span class="method">GET</span> <span class="url">/validate?key=</span><span class="param">{key}</span>
+      </div>
+      <h3>Parameters</h3>
+      <table class="table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to validate</td></tr>
+        <tr><td><code>hwid</code></td><td>string</td><td>Optional hardware ID for binding</td></tr>
+      </table>
+      <h3>Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"valid"</span>: <span class="string">true</span>,<br>
+        &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"hwid"</span>: <span class="string">"ABC123"</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Create Key -->
+    <div class="section" id="create">
+      <h2>Create Key</h2>
+      <p>Generate a new license key.</p>
+      <div class="code-block">
+        <span class="method">POST</span> <span class="url">/create</span>
+      </div>
+      <h3>Body Parameters</h3>
+      <table class="table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>duration</code></td><td>integer</td><td>Key duration in days</td></tr>
+        <tr><td><code>note</code></td><td>string</td><td>Optional note for the key</td></tr>
+        <tr><td><code>hwid_lock</code></td><td>boolean</td><td>Enable hardware ID binding</td></tr>
+      </table>
+      <h3>Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"success"</span>: <span class="string">true</span>,<br>
+        &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-A1B2-C3D4"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Delete Key -->
+    <div class="section" id="delete">
+      <h2>Delete Key</h2>
+      <p>Permanently delete a license key.</p>
+      <div class="code-block">
+        <span class="method">DELETE</span> <span class="url">/delete?key=</span><span class="param">{key}</span>
+      </div>
+      <h3>Parameters</h3>
+      <table class="table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to delete</td></tr>
+      </table>
+      <h3>Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"success"</span>: <span class="string">true</span>,<br>
+        &nbsp;&nbsp;<span class="key">"message"</span>: <span class="string">"Key deleted"</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Get Key Info -->
+    <div class="section" id="info">
+      <h2>Get Key Info</h2>
+      <p>Retrieve detailed information about a license key.</p>
+      <div class="code-block">
+        <span class="method">GET</span> <span class="url">/info?key=</span><span class="param">{key}</span>
+      </div>
+      <h3>Parameters</h3>
+      <table class="table">
+        <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>key</code></td><td>string</td><td>The license key to look up</td></tr>
+      </table>
+      <h3>Response</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"created"</span>: <span class="string">"2024-01-01"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"expires"</span>: <span class="string">"2025-12-31"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"hwid"</span>: <span class="string">"ABC123"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"note"</span>: <span class="string">"Premium user"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"uses"</span>: <span class="string">42</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Error Codes -->
+    <div class="section" id="errors">
+      <h2>Error Codes</h2>
+      <p>Common error responses from the API.</p>
+      <table class="table">
+        <tr><th>Code</th><th>Message</th><th>Description</th></tr>
+        <tr><td><code>400</code></td><td>Bad Request</td><td>Invalid parameters</td></tr>
+        <tr><td><code>401</code></td><td>Unauthorized</td><td>Invalid API key</td></tr>
+        <tr><td><code>404</code></td><td>Not Found</td><td>Key does not exist</td></tr>
+        <tr><td><code>409</code></td><td>Conflict</td><td>HWID mismatch</td></tr>
+        <tr><td><code>410</code></td><td>Gone</td><td>Key expired</td></tr>
+        <tr><td><code>429</code></td><td>Too Many Requests</td><td>Rate limit exceeded</td></tr>
+        <tr><td><code>500</code></td><td>Server Error</td><td>Internal error</td></tr>
+      </table>
+      <h3>Error Response Format</h3>
+      <div class="code-block">
+        {<br>
+        &nbsp;&nbsp;<span class="key">"success"</span>: <span class="string">false</span>,<br>
+        &nbsp;&nbsp;<span class="key">"error"</span>: <span class="string">"Invalid key"</span>,<br>
+        &nbsp;&nbsp;<span class="key">"code"</span>: <span class="string">404</span><br>
+        }
+      </div>
+    </div>
+
+    <!-- Rate Limits -->
+    <div class="section" id="ratelimits">
+      <h2>Rate Limits</h2>
+      <p>API requests are rate limited to ensure fair usage.</p>
+      <table class="table">
+        <tr><th>Plan</th><th>Requests</th><th>Window</th></tr>
+        <tr><td><code>Free</code></td><td>100</td><td>per minute</td></tr>
+        <tr><td><code>Basic</code></td><td>500</td><td>per minute</td></tr>
+        <tr><td><code>Pro</code></td><td>2000</td><td>per minute</td></tr>
+        <tr><td><code>Enterprise</code></td><td>Unlimited</td><td>-</td></tr>
+      </table>
+      <h3>Rate Limit Headers</h3>
+      <div class="code-block">
+        <span class="key">X-RateLimit-Limit</span>: <span class="string">100</span><br>
+        <span class="key">X-RateLimit-Remaining</span>: <span class="string">95</span><br>
+        <span class="key">X-RateLimit-Reset</span>: <span class="string">1704067200</span>
+      </div>
+    </div>
+
+    <!-- Examples -->
+    <div class="section" id="examples">
+      <h2>Examples</h2>
+      <p>Code examples for common use cases.</p>
+      <h3>Python</h3>
+      <div class="code-block">
+        <span class="key">import</span> requests<br><br>
+        <span class="param">url</span> = <span class="string">"https://api.snowflake.dev/v1/validate"</span><br>
+        <span class="param">headers</span> = {<span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span>}<br>
+        <span class="param">params</span> = {<span class="string">"key"</span>: <span class="string">"SNOW-XXXX-XXXX"</span>}<br><br>
+        <span class="param">response</span> = requests.get(url, headers=headers, params=params)<br>
+        <span class="key">print</span>(response.json())
+      </div>
+      <h3>JavaScript</h3>
+      <div class="code-block">
+        <span class="key">const</span> <span class="param">response</span> = <span class="key">await</span> fetch(<br>
+        &nbsp;&nbsp;<span class="string">"https://api.snowflake.dev/v1/validate?key=SNOW-XXXX-XXXX"</span>,<br>
+        &nbsp;&nbsp;{ headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer YOUR_API_KEY"</span> } }<br>
+        );<br><br>
+        <span class="key">const</span> <span class="param">data</span> = <span class="key">await</span> response.json();<br>
+        console.log(data);
+      </div>
+      <h3>cURL</h3>
+      <div class="code-block">
+        curl -X GET <span class="string">"https://api.snowflake.dev/v1/validate?key=SNOW-XXXX-XXXX"</span> \<br>
+        &nbsp;&nbsp;-H <span class="string">"Authorization: Bearer YOUR_API_KEY"</span>
+      </div>
+    </div>
   </main>
+
+  <script>
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        item.classList.add('active');
+        document.getElementById(item.dataset.section).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
